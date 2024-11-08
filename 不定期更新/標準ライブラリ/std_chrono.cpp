@@ -47,10 +47,11 @@ int main()
   // 時間計測
   std::chrono::system_clock::time_point start, end;
   start = std::chrono::system_clock::now();
-  for (int i = 0; i < 5; i++)
+  for (int i = 0; i < 50001; i++)
   {
-    std::cout << "%d秒経過\n", i;
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::cout << i << "\n";
   }
   end = std::chrono::system_clock::now();
+  std::chrono::milliseconds millstart = start;
+  std::chrono::milliseconds millend = end;
 }
