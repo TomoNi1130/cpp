@@ -53,12 +53,12 @@ int main()
 
    for (int i = 0; i < 30; i++)
    {
-      std::cout << "rando1:" << rando1[i] << std::endl;
+      std::cout << rando1[i] << std::endl;
    }
    std::cout << "\n"
              << std::endl;
    for (int i = 0; i < 30; i++)
    {
-      std::cout << "rando2:" << rando2[i] << std::endl;
+      std::cout << rando2[i] << std::endl;
    }
 }

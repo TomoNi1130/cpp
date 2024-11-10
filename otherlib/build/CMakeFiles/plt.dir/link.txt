@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/plt.dir/matplotlibcpp_h.cpp.o -o plt  /usr/lib/x86_64-linux-gnu/libpython3.10.so 
