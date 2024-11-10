@@ -1,4 +1,4 @@
-// センサーなどを使っていて得た数値をもとにグラフが書きたいと思った
+// センサーを使っていて得た数値をもとにグラフが書きたいと思った
 // 調べてみるとmatplotlibというものがpythonにはあるというではないか．しかし，私はcpp使いたい．
 // そんな時は，matplotlibcpp.hを使おう！！
 
@@ -26,14 +26,20 @@ int main()
    plt::plot(x, y);
 
    // グラフに名前を付けることもできる
-   std::vector<double> nx(n), ny(n);
+
+   std::vector<double> nz(n), ny(n);
    for (int i = 0; i < n; ++i)
    {
-      nx[i] = i;
-      ny[i] = 0.0005 * i - 0.2;
+      ny[i] = 0.006 * i - 2;
+      nz[i] = -0.009 * i + 4;
    }
-   plt::named_plot("0.0005x-0.2", nx, ny);
+   plt::named_plot("0.006x-2", x, ny);
+   plt::named_plot("0.009x+4", x, nz);
+   plt::legend(); // これがないと左上の名札が出ない
    plt::show();
+
+   // 複数グラフの描写
+   // pythonのものと同じようにこちらもsubplot関数を使う(しかし，これはcppしか使わない人が書いているのでsubplotの使い方から書く)
 
    return 0;
 }

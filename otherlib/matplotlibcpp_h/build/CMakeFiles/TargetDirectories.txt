@@ -1,3 +1,0 @@
-/mnt/c/study/language/cpp/otherlib/build/CMakeFiles/plt.dir
-/mnt/c/study/language/cpp/otherlib/build/CMakeFiles/edit_cache.dir
-/mnt/c/study/language/cpp/otherlib/build/CMakeFiles/rebuild_cache.dir

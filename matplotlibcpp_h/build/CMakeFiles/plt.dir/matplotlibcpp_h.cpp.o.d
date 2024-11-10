@@ -1,5 +1,5 @@
 CMakeFiles/plt.dir/matplotlibcpp_h.cpp.o: \
- /mnt/c/study/language/cpp/otherlib/matplotlibcpp_h.cpp \
+ /mnt/c/study/language/cpp/matplotlibcpp_h/matplotlibcpp_h.cpp \
  /usr/include/stdc-predef.h /usr/include/c++/11/iostream \
  /usr/include/x86_64-linux-gnu/c++/11/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/11/bits/os_defines.h \
@@ -157,7 +157,7 @@ CMakeFiles/plt.dir/matplotlibcpp_h.cpp.o: \
  /usr/include/c++/11/bits/stl_vector.h \
  /usr/include/c++/11/bits/stl_bvector.h \
  /usr/include/c++/11/bits/vector.tcc \
- /mnt/c/study/language/cpp/otherlib/matplotlibcpp.h \
+ /mnt/c/study/language/cpp/matplotlibcpp_h/matplotlibcpp.h \
  /usr/include/python3.10/Python.h /usr/include/python3.10/patchlevel.h \
  /usr/include/python3.10/pyconfig.h \
  /usr/include/x86_64-linux-gnu/python3.10/pyconfig.h \
