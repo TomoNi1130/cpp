@@ -4,6 +4,8 @@
 
 // 導入方法 --> https://hirlab.net/nblog/category/programming/art_826/
 
+// ーーー2024-11-11ーーーーーー
+
 // 使い方ーー
 
 #include <iostream>
