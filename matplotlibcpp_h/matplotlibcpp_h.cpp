@@ -29,7 +29,7 @@ int main()
    }
    // plt::subplot(2, 1, 1);
    // plt::ylabel("functions");
-   plt::plot(x, y);
+   plt::scatter(x, y); // scatter関数で点が打てる
 
    // グラフに名前を付けることもできる
 
@@ -39,7 +39,7 @@ int main()
       ny[i] = 0.006 * i - 2;
       nz[i] = -0.009 * i + 4;
    }
-   plt::named_plot("0.006x-2", x, ny);
+   plt::named_plot("0.006x-2", x, ny); // plot関数で線が描ける
    plt::named_plot("0.009x+4", x, nz);
    plt::legend(); // これがないと左上の名札が出ない
    plt::title("functions");

@@ -1,27 +1,8 @@
 cmake_minimum_required(VERSION 3.14)
-#project(プロジェクト名 CXX)
-project(plt)
- 
-# # Default to C99
-# if(NOT CMAKE_C_STANDARD)
-#   set(CMAKE_C_STANDARD 99)
-# endif()
 
-# # Default to C++14
-# if(NOT CMAKE_CXX_STANDARD)
-#   set(CMAKE_CXX_STANDARD 14)
-# endif()
+project(plt)
 
 set(CMAKE_CXX_STANDARD 11)
-#  # Find the Python 3.10 package
-# find_package(Python3 REQUIRED COMPONENTS Development)
-# include_directories(${Python3_INCLUDE_DIRS})
-
-# if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-#   add_compile_options(-Wall -Wextra -Wpedantic)
-# endif()
-
-# Include Python headers
 add_executable(
   plt matplotlibcpp_h.cpp
 )
