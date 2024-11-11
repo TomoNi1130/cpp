@@ -17,12 +17,12 @@ make
 
 namespace plt = matplotlibcpp;
 
-const int points_number = 100;
+const int points_number = 1000;
 const double pi = 3.14159;
 
 void length_to_points(double *x, double *y, const double length, const int number)
 {
-   double tani = 1.5 * pi / points_number;
+   double tani = 2 * pi / points_number;
    double theta = number * tani - pi / 4;
    *x = cos(theta) * length;
    *y = sin(theta) * length;
