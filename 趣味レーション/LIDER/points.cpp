@@ -1,3 +1,13 @@
+// 自作rviz (ランダムな場所に点を打つだけ)
+
+// 実行方法ーー
+/*
+build内でターミナルを開く
+cmake ..(初回のみ)
+make
+./plt
+*/
+// ーーー
 #include <iostream>
 #include <random>
 #include <vector>
