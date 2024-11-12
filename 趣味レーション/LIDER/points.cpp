@@ -17,7 +17,7 @@ make
 
 namespace plt = matplotlibcpp;
 
-const int points_number = 100;
+const int points_number = 1000;
 const double pi = 3.14159;
 
 void length_to_points(double *x, double *y, const double length, const int number)
@@ -37,38 +37,44 @@ int main()
    // std::normal_distribution<double> dist(1.5f, 1.5f);
 
    std::vector<double> x(points_number), y(points_number), length(points_number);
-
-   for (int i = 0; i < points_number; ++i)
-   {
-      length[i] = dist(mt);
-   }
-
-   for (int i = 0; i < length.size(); ++i)
-   {
-      length_to_points(&x[i], &y[i], length[i], i);
-   }
-
-   std::vector<double> x_line_x(2), x_line_y(2), y_line_x(2), y_line_y(2);
-
-   for (int i = 0; i < 2; ++i)
-   {
-      x_line_x[i] = -6 * i + 3;
-      x_line_y[i] = 0;
-   }
-   for (int i = 0; i < 2; ++i)
-   {
-      y_line_x[i] = 0;
-      y_line_y[i] = -6 * i + 3;
-   }
-
-   plt::plot(x_line_x, x_line_y);
-   plt::plot(y_line_x, y_line_y);
-
-   plt::scatter(x, y);
-
-   plt::xlabel("X");
-   plt::ylabel("Y");
    plt::show();
+   while (1)
+   {
+
+      plt::clf();
+      for (int i = 0; i < points_number; ++i)
+      {
+         length[i] = dist(mt);
+      }
+
+      for (int i = 0; i < length.size(); ++i)
+      {
+         length_to_points(&x[i], &y[i], length[i], i);
+      }
+
+      std::vector<double> x_line_x(2), x_line_y(2), y_line_x(2), y_line_y(2);
+
+      for (int i = 0; i < 2; ++i)
+      {
+         x_line_x[i] = -6 * i + 3;
+         x_line_y[i] = 0;
+      }
+      for (int i = 0; i < 2; ++i)
+      {
+         y_line_x[i] = 0;
+         y_line_y[i] = -6 * i + 3;
+      }
+
+      plt::plot(x_line_x, x_line_y);
+      plt::plot(y_line_x, y_line_y);
+
+      plt::scatter(x, y);
+
+      plt::xlabel("X");
+      plt::ylabel("Y");
+
+      plt::pause(0.01);
+   }
 
    return 0;
 }
