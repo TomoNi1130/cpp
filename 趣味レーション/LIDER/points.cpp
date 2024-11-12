@@ -17,7 +17,7 @@ make
 
 namespace plt = matplotlibcpp;
 
-const int points_number = 1000;
+const int points_number = 100;
 const double pi = 3.14159;
 
 void length_to_points(double *x, double *y, const double length, const int number)
@@ -33,7 +33,8 @@ int main()
    std::random_device rnd;
    std::mt19937 mt(rnd());
 
-   std::uniform_real_distribution<double> dist(0.1f, 3.0f);
+   std::uniform_real_distribution<double> dist(0.0f, 3.0f);
+   // std::normal_distribution<double> dist(1.5f, 1.5f);
 
    std::vector<double> x(points_number), y(points_number), length(points_number);
 
