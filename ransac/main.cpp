@@ -7,24 +7,18 @@
 
 namespace plt = matplotlibcpp;
 
-const int points_number = 750;
+const int points_number = 700;
 
-void drow_function(double a, double b) // 傾きと切片から一次関数のグラフを書く
+struct line
 {
-   std::vector<double> x_gess(points_number), y_gess(points_number);
+   double slope, intercept;
+};
 
-   for (int i = 0; i < points_number; i++)
-   {
-      x_gess[i] = i - points_number / 2.0;
-      y_gess[i] = a * x_gess[i] + b;
-   }
-   plt::plot(x_gess, y_gess);
-}
 void drow_axes(int x) // 座標軸を書く用の関数
 {
-   int number = 2 * x + 1;
+   int number = 1 * x + 1;
    std::vector<double> x_x_line(number), y_x_line(number), x_y_line(number), y_y_line(number);
-   int a = -x;
+   int a = -0.5 * x;
    for (int i = 0; i < number; i++)
    {
       x_x_line[i] = a;
@@ -37,64 +31,110 @@ void drow_axes(int x) // 座標軸を書く用の関数
    plt::plot(x_y_line, y_y_line);
 }
 
-void make_points(std::vector<double> &x, std::vector<double> &y) // ある一次関数をもとにした点群を作る
+void drow_function(line line) // 一次関数のグラフを書く関数
+{
+   std::vector<double> x_gess(points_number), y_gess(points_number);
+
+   for (int i = 0; i < points_number; i++)
+   {
+      x_gess[i] = i - points_number / 2.0;
+      y_gess[i] = line.slope * x_gess[i] + line.intercept;
+   }
+   plt::plot(x_gess, y_gess);
+}
+
+void make_random_points(line line, double amplitude, std::vector<double> &_x, std::vector<double> &_y) // amplitude = 振れ幅
 {
    std::random_device rnd;
    std::mt19937 mt(rnd());
-   std::normal_distribution<double> dist(0.0f, 6.0f);
+   std::normal_distribution<double> dist(0.0f, amplitude);
 
-   for (int i = 0; i < x.size(); i++)
+   for (int i = 0; i < points_number; i++)
    {
-      x[i] = i - points_number / 2;
-      y[i] = x[i] + 10.0;
-      x[i] += dist(mt);
+      _x[i] = i - points_number / 2;
+      _y[i] = line.slope * _x[i] + line.intercept + dist(mt);
    }
 }
 
-double average(const std::vector<double> &f, int N) // 配列の全要素の平均をとる関数
+double calculate_error(double x, double y, const line &model)
 {
-   double ave = 0.0;
-
-   for (int i = 0; i < N; i++)
-      ave += f[i] / (double)N;
-
-   return ave;
+   double y_est = model.slope * x + model.intercept;
+   return std::fabs(y - y_est);
 }
 
-double average_2char(std::vector<double> &f, std::vector<double> &f2, int N) // 二つの配列をかけた結果の平均をとる関数
+line fit_line(double x1, double y1, double x2, double y2)
 {
-   double ave2c = 0.0;
-
-   for (int i = 0; i < N; i++)
-      ave2c += f[i] * f2[i] / (double)N;
-
-   return ave2c;
+   double slope = (y2 - y1) / (x2 - x1);
+   double intercept = y1 - slope * x1;
+   return {slope, intercept};
 }
 
-void saisyou(std::vector<double> &x, std::vector<double> &y, const int points_number, double &a, double &b) // 上記の関数をつかい最小二乗法する関数
+line ransac(std::vector<double> x, std::vector<double> y, int max_iterations, double threshold)
 {
-   double ave_x = average(x, points_number);
-   double ave_y = average(y, points_number);
-   double ave_xy = average_2char(x, y, points_number);
-   double ave_xx = average_2char(x, x, points_number);
+   std::random_device rd;
+   std::mt19937 gen(rd());
+   std::uniform_int_distribution<> dis(0, x.size() - 1);
 
-   a = (ave_xy - (ave_x * ave_y)) / (ave_xx - (ave_x * ave_x));
-   b = ave_y - a * ave_x;
+   line best_model;
+   int best_inliers_count = 0;
+   // ransacーーーーー
+   for (int i = 0; i < max_iterations; ++i)
+   {
+      int idx1 = dis(gen);
+      int idx2 = dis(gen);
+      while (idx2 == idx1)
+      {
+         idx2 = dis(gen);
+      }
+      line model = fit_line(x[idx1], y[idx1], x[idx2], y[idx2]);
+      int inliers_count = 0;
+      for (size_t j = 0; j < x.size(); ++j)
+      {
+         if (calculate_error(x[j], y[j], model) < threshold)
+         {
+            ++inliers_count;
+         }
+      }
+      if (inliers_count > best_inliers_count)
+      {
+         best_inliers_count = inliers_count;
+         best_model = model;
+      }
+   }
+   return best_model;
+}
+
+void make_outliners(std::vector<double> &y)
+{
+   std::random_device rd;
+   std::mt19937 gen(rd());
+   std::uniform_int_distribution<int> dis(0, points_number);
+   for (int i = 0; i < 100; i++)
+   {
+      y[dis(gen)] = 500;
+   }
 }
 
 int main()
 {
-   std::vector<double> x(points_number), y(points_number);
-   make_points(x, y);        // 点群を作成
-   drow_axes(points_number); // 座標軸を描写
-   plt::scatter(x, y);       // 点群を描写
+   line line1 = {1.0, 30.0};
+   line line2 = {-1.0, -50.0};
+   std::vector<double> line1_x(points_number), line1_y(points_number);
+   std::vector<double> line2_x(points_number), line2_y(points_number);
+   make_random_points(line1, 5.0, line1_x, line1_y);
+   make_random_points(line2, 0.0, line2_x, line2_y);
+   make_outliners(line1_y);
 
-   // ransacーーーーー
-   /*1. 求めたい数値モデルのパラメータを決めるのに必要な最小限の数の測定値をランダムに選ぶ。
-     2. 選んだ測定値をもとに、パラメータを決定する。
-     3. 2で決定したパラメータをもとにして作った数値モデルを全測定値にあてはめ、あらかじめ設定した許容誤差の範囲にある測定値の数を求める。
-     4. 3で求めた許容誤差の範囲にある測定値の数が、あらかじめ設定した閾値より多いか調べる。
-     ここで閾値を上回っていたら、許容誤差の範囲にある測定値をすべて使ってもう一度数値モデルを推定し、終了する。
-     一方閾値を上回っていなかったら、処理1に戻る。（最大N回繰り返す）
-   */
+   drow_axes(points_number);
+   plt::scatter(line1_x, line1_y);
+   // plt::scatter(line2_x, line2_y);
+
+   int max_iterations = 100;
+   double threshold = 5.0;
+   line best_line = ransac(line1_x, line1_y, max_iterations, threshold);
+   std::cout << "傾き(目標):" << line1.slope << "切片(目標):" << line1.intercept << std::endl;
+   std::cout << "傾き(予測):" << best_line.slope << "切片(予測):" << best_line.intercept << std::endl;
+   drow_function(best_line);
+
+   plt::show();
 }
