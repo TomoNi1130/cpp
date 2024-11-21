@@ -72,15 +72,9 @@ void saisyou(std::vector<double> &x, std::vector<double> &y, const int points_nu
    b = -((ave_xy - (ave_x * ave_y)) / ave_xx - (ave_x * ave_x)) * ave_x + ave_y;
 }
 
-int main()
+void drow_function(double a, double b)
 {
-   std::vector<double> x(points_number), y(points_number);
    std::vector<double> x_gess(points_number), y_gess(points_number);
-   make_points(x, y);
-   drow_axes(points_number);
-   plt::scatter(x, y);
-   double a, b;
-   saisyou(x, y, points_number, a, b);
    std::cout << a << std::endl;
    std::cout << b << std::endl;
    for (int i = 0; i < points_number; i++)
@@ -88,8 +82,19 @@ int main()
       x_gess[i] = i - points_number / 2.0;
       y_gess[i] = a * x_gess[i] + b;
    }
-
    plt::plot(x_gess, y_gess);
+}
+
+int main()
+{
+   std::vector<double> x(points_number), y(points_number);
+   make_points(x, y);
+   drow_axes(points_number);
+   plt::scatter(x, y);
+   double a, b;
+   saisyou(x, y, points_number, a, b);
+   drow_function(a, b);
+
    plt::xlabel("X");
    plt::ylabel("Y");
 
