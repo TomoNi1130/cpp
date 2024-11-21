@@ -17,7 +17,7 @@ make
 
 namespace plt = matplotlibcpp;
 
-const int points_number = 1000;
+const int points_number = 75;
 const double pi = 3.14159;
 
 void length_to_points(double *x, double *y, const double length, const int number)
@@ -73,7 +73,7 @@ int main()
       plt::xlabel("X");
       plt::ylabel("Y");
 
-      plt::pause(0.01);
+      plt::pause(1);
    }
 
    return 0;

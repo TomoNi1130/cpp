@@ -41,6 +41,8 @@ int main()
    }
    plt::named_plot("0.006x-2", x, ny); // plot関数で線が描ける
    plt::named_plot("0.009x+4", x, nz);
+   // std::vector<double> xl = {-5, 5}, yl = {0, 0};
+   // plt::plot(xl, yl);
    plt::legend(); // これがないと左上の名札が出ない
    plt::title("functions");
    plt::xlabel("X");
