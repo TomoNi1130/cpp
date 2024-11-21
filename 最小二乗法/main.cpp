@@ -7,12 +7,11 @@
 
 namespace plt = matplotlibcpp;
 
-const int points_number = 75.0;
+const int points_number = 750;
 void drow_function(double a, double b) // 傾きと切片から一次関数のグラフを書く
 {
    std::vector<double> x_gess(points_number), y_gess(points_number);
-   std::cout << a << std::endl;
-   std::cout << b << std::endl;
+
    for (int i = 0; i < points_number; i++)
    {
       x_gess[i] = i - points_number / 2.0;
@@ -41,18 +40,17 @@ void make_points(std::vector<double> &x, std::vector<double> &y) // ある一次
 {
    std::random_device rnd;
    std::mt19937 mt(rnd());
-   std::normal_distribution<double> dist(0.0f, 1.0f);
+   std::normal_distribution<double> dist(0.0f, 6.0f);
 
    for (int i = 0; i < x.size(); i++)
    {
       x[i] = i - points_number / 2;
       y[i] = x[i] + 10.0;
-
       x[i] += dist(mt);
    }
 }
 
-double average(std::vector<double> &f, int N) // 配列の全要素の平均をとる関数
+double average(const std::vector<double> &f, int N) // 配列の全要素の平均をとる関数
 {
    double ave = 0.0;
 
@@ -67,7 +65,7 @@ double average_2char(std::vector<double> &f, std::vector<double> &f2, int N) // 
    double ave2c = 0.0;
 
    for (int i = 0; i < N; i++)
-      ave2c = f[i] * f2[i] / (double)N;
+      ave2c += f[i] * f2[i] / (double)N;
 
    return ave2c;
 }
@@ -79,8 +77,8 @@ void saisyou(std::vector<double> &x, std::vector<double> &y, const int points_nu
    double ave_xy = average_2char(x, y, points_number);
    double ave_xx = average_2char(x, x, points_number);
 
-   a = (ave_xy - (ave_x * ave_y)) / ave_xx - (ave_x * ave_x);
-   b = -((ave_xy - (ave_x * ave_y)) / ave_xx - (ave_x * ave_x)) * ave_x + ave_y;
+   a = (ave_xy - (ave_x * ave_y)) / (ave_xx - (ave_x * ave_x));
+   b = ave_y - a * ave_x;
 }
 
 int main()
@@ -93,8 +91,9 @@ int main()
    // 最小二乗法ーー
    double a, b;
    saisyou(x, y, points_number, a, b);
-   drow_function(a - 0.252027, b); // どうしても0.2ほど誤差が発生するので頭悪く引いてみた
-
+   drow_function(a, b); // どうしても0.2ほど誤差が発生するので頭悪く引いてみた
+   std::cout << a << std::endl;
+   std::cout << b << std::endl;
    plt::xlabel("X");
    plt::ylabel("Y");
 
