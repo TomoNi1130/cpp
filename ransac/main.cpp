@@ -1,133 +1,100 @@
-#include <cmath>
 #include <iostream>
-#include <vector>
 #include <random>
+#include <vector>
+#include <cmath>
+
 #include "matplotlibcpp.h"
 
 namespace plt = matplotlibcpp;
 
-const int points_number = 75;
+const int points_number = 750;
 
-void get_param(const std::array<double, 2> &p1, const std::array<double, 2> &p2, double &a, double &b, double &c)
+void drow_function(double a, double b) // 傾きと切片から一次関数のグラフを書く
 {
-   a = p2[1] - p1[1];
-   b = p1[0] - p2[0];
-   c = -1 * p1[0] * b - p1[0] * a;
-}
+   std::vector<double> x_gess(points_number), y_gess(points_number);
 
-double euclid(const std::vector<double> &params, const std::array<double, 2> &point)
-{
-   double a = params[0], b = params[1], c = params[2];
-   double x = point[0], y = point[1];
-   double norm = std::sqrt(a * a + b * b);
-   double dist = std::fabs(a * x + b * y + c) / norm;
-   return dist;
-}
-
-double model(const std::vector<double> &params, double x)
-{
-   double a = params[0], b = params[1], c = params[2];
-   double slope = -a / b;
-   double intercept = -c / b;
-   return slope * x + intercept;
-}
-// ransac関数
-void ransac(int max_loop, double threshold, const std::vector<std::array<double, 2>> &points, std::vector<double> &xnew, std::vector<double> &ynew, bool &state)
-{
-   int best_p_cnt = 0;
-   std::vector<double> best_param(3);
-
-   std::random_device rd;
-   std::mt19937 gen(rd());
-   std::uniform_int_distribution<> dis(0, points.size() - 1);
-
-   for (int i = 0; i < max_loop; ++i)
+   for (int i = 0; i < points_number; i++)
    {
-      int idx1 = dis(gen);
-      int idx2 = dis(gen);
-      if (idx1 == idx2)
-         continue;
-
-      double a, b, c;
-      get_param(points[idx1], points[idx2], a, b, c);
-      std::vector<double> param = {a, b, c};
-
-      int p_cnt = 0;
-      for (const auto &point : points)
-      {
-         double dist = euclid(param, point);
-         if (dist <= threshold)
-         {
-            ++p_cnt;
-         }
-      }
-      if (p_cnt > best_p_cnt)
-      {
-         best_p_cnt = p_cnt;
-         best_param = param;
-      }
+      x_gess[i] = i - points_number / 2.0;
+      y_gess[i] = a * x_gess[i] + b;
    }
-
-   if (best_p_cnt <= 150)
+   plt::plot(x_gess, y_gess);
+}
+void drow_axes(int x) // 座標軸を書く用の関数
+{
+   int number = 2 * x + 1;
+   std::vector<double> x_x_line(number), y_x_line(number), x_y_line(number), y_y_line(number);
+   int a = -x;
+   for (int i = 0; i < number; i++)
    {
-      std::cout << "No line" << std::endl;
-      state = false;
+      x_x_line[i] = a;
+      y_x_line[i] = 0;
+      x_y_line[i] = 0;
+      y_y_line[i] = a;
+      a += 1;
    }
-   else
+   plt::plot(x_x_line, y_x_line);
+   plt::plot(x_y_line, y_y_line);
+}
+
+void make_points(std::vector<double> &x, std::vector<double> &y) // ある一次関数をもとにした点群を作る
+{
+   std::random_device rnd;
+   std::mt19937 mt(rnd());
+   std::normal_distribution<double> dist(0.0f, 6.0f);
+
+   for (int i = 0; i < x.size(); i++)
    {
-      state = true;
-      xnew.clear();
-      ynew.clear();
-      for (double x = -2.0; x <= 2.0; x += 0.1)
-      {
-         xnew.push_back(x);
-         ynew.push_back(model(best_param, x));
-      }
+      x[i] = i - points_number / 2;
+      y[i] = x[i] + 10.0;
+      x[i] += dist(mt);
    }
 }
 
-void process_lidar_data(const std::vector<double> &ranges)
+double average(const std::vector<double> &f, int N) // 配列の全要素の平均をとる関数
 {
-   std::vector<std::array<double, 2>> points;
-   std::vector<double> plot_x, plot_y;
-   std::vector<double> xnew, ynew;
-   bool state = false;
+   double ave = 0.0;
 
-   for (size_t i = 0; i < ranges.size(); ++i)
-   {
-      double theta = M_PI * (225 - 0.2497 * i) / 180.0;
-      double length = ranges[i];
-      std::array<double, 2> point = {length * std::cos(theta), length * std::sin(theta)};
-      points.push_back(point);
-      plot_x.push_back(point[0]);
-      plot_y.push_back(point[1]);
-   }
+   for (int i = 0; i < N; i++)
+      ave += f[i] / (double)N;
 
-   ransac(300, 0.001, points, xnew, ynew, state);
+   return ave;
+}
 
-   plt::clf();
-   plt::plot(plot_x, plot_y);
-   if (state)
-   {
-      plt::plot(xnew, ynew, {{"label", "lidar_line"}});
-   }
-   plt::legend();
-   plt::grid(true);
-   plt::xlim(-2, 2);
-   plt::ylim(-2, 2);
-   plt::pause(0.001);
+double average_2char(std::vector<double> &f, std::vector<double> &f2, int N) // 二つの配列をかけた結果の平均をとる関数
+{
+   double ave2c = 0.0;
+
+   for (int i = 0; i < N; i++)
+      ave2c += f[i] * f2[i] / (double)N;
+
+   return ave2c;
+}
+
+void saisyou(std::vector<double> &x, std::vector<double> &y, const int points_number, double &a, double &b) // 上記の関数をつかい最小二乗法する関数
+{
+   double ave_x = average(x, points_number);
+   double ave_y = average(y, points_number);
+   double ave_xy = average_2char(x, y, points_number);
+   double ave_xx = average_2char(x, x, points_number);
+
+   a = (ave_xy - (ave_x * ave_y)) / (ave_xx - (ave_x * ave_x));
+   b = ave_y - a * ave_x;
 }
 
 int main()
 {
-   std::random_device rnd;
-   std::mt19937 mt(rnd());
-   std::uniform_real_distribution<double> dist(0.0f, 3.0f);
-   std::vector<double> ranges(points_number);
-   for (int i = 0; i < points_number; ++i)
-   {
-      ranges[i] = dist(mt);
-   }
-   process_lidar_data(ranges);
-   return 0;
+   std::vector<double> x(points_number), y(points_number);
+   make_points(x, y);        // 点群を作成
+   drow_axes(points_number); // 座標軸を描写
+   plt::scatter(x, y);       // 点群を描写
+
+   // ransacーーーーー
+   /*1. 求めたい数値モデルのパラメータを決めるのに必要な最小限の数の測定値をランダムに選ぶ。
+     2. 選んだ測定値をもとに、パラメータを決定する。
+     3. 2で決定したパラメータをもとにして作った数値モデルを全測定値にあてはめ、あらかじめ設定した許容誤差の範囲にある測定値の数を求める。
+     4. 3で求めた許容誤差の範囲にある測定値の数が、あらかじめ設定した閾値より多いか調べる。
+     ここで閾値を上回っていたら、許容誤差の範囲にある測定値をすべて使ってもう一度数値モデルを推定し、終了する。
+     一方閾値を上回っていなかったら、処理1に戻る。（最大N回繰り返す）
+   */
 }

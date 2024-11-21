@@ -8,6 +8,7 @@
 namespace plt = matplotlibcpp;
 
 const int points_number = 750;
+
 void drow_function(double a, double b) // 傾きと切片から一次関数のグラフを書く
 {
    std::vector<double> x_gess(points_number), y_gess(points_number);
@@ -21,9 +22,9 @@ void drow_function(double a, double b) // 傾きと切片から一次関数の�
 }
 void drow_axes(int x) // 座標軸を書く用の関数
 {
-   int number = 2 * x + 1;
+   int number = 1 * x + 1;
    std::vector<double> x_x_line(number), y_x_line(number), x_y_line(number), y_y_line(number);
-   int a = -x;
+   int a = -0.5 * x;
    for (int i = 0; i < number; i++)
    {
       x_x_line[i] = a;
@@ -40,12 +41,12 @@ void make_points(std::vector<double> &x, std::vector<double> &y) // ある一次
 {
    std::random_device rnd;
    std::mt19937 mt(rnd());
-   std::normal_distribution<double> dist(0.0f, 6.0f);
+   std::normal_distribution<double> dist(0.0f, 20.0f);
 
    for (int i = 0; i < x.size(); i++)
    {
       x[i] = i - points_number / 2;
-      y[i] = x[i] + 10.0;
+      y[i] = 1 * x[i] + 80.0;
       x[i] += dist(mt);
    }
 }
@@ -92,8 +93,10 @@ int main()
    double a, b;
    saisyou(x, y, points_number, a, b);
    drow_function(a, b); // どうしても0.2ほど誤差が発生するので頭悪く引いてみた
-   std::cout << a << std::endl;
-   std::cout << b << std::endl;
+
+   std::cout << "傾き:" << a << std::endl;
+   std::cout << "切片:" << b << std::endl;
+
    plt::xlabel("X");
    plt::ylabel("Y");
 
