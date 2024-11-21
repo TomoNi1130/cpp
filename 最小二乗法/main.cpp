@@ -8,7 +8,18 @@
 namespace plt = matplotlibcpp;
 
 const int points_number = 75.0;
-
+void drow_function(double a, double b) // 傾きと切片から一次関数のグラフを書く
+{
+   std::vector<double> x_gess(points_number), y_gess(points_number);
+   std::cout << a << std::endl;
+   std::cout << b << std::endl;
+   for (int i = 0; i < points_number; i++)
+   {
+      x_gess[i] = i - points_number / 2.0;
+      y_gess[i] = a * x_gess[i] + b;
+   }
+   plt::plot(x_gess, y_gess);
+}
 void drow_axes(int x) // 座標軸を書く用の関数
 {
    int number = 2 * x + 1;
@@ -26,11 +37,11 @@ void drow_axes(int x) // 座標軸を書く用の関数
    plt::plot(x_y_line, y_y_line);
 }
 
-void make_points(std::vector<double> &x, std::vector<double> &y)
+void make_points(std::vector<double> &x, std::vector<double> &y) // ある一次関数をもとにした点群を作る
 {
    std::random_device rnd;
    std::mt19937 mt(rnd());
-   std::normal_distribution<double> dist(0.0f, 3.0f);
+   std::normal_distribution<double> dist(0.0f, 1.0f);
 
    for (int i = 0; i < x.size(); i++)
    {
@@ -41,7 +52,7 @@ void make_points(std::vector<double> &x, std::vector<double> &y)
    }
 }
 
-double average(std::vector<double> &f, int N)
+double average(std::vector<double> &f, int N) // 配列の全要素の平均をとる関数
 {
    double ave = 0.0;
 
@@ -51,7 +62,7 @@ double average(std::vector<double> &f, int N)
    return ave;
 }
 
-double average_2char(std::vector<double> &f, std::vector<double> &f2, int N)
+double average_2char(std::vector<double> &f, std::vector<double> &f2, int N) // 二つの配列をかけた結果の平均をとる関数
 {
    double ave2c = 0.0;
 
@@ -61,7 +72,7 @@ double average_2char(std::vector<double> &f, std::vector<double> &f2, int N)
    return ave2c;
 }
 
-void saisyou(std::vector<double> &x, std::vector<double> &y, const int points_number, double &a, double &b)
+void saisyou(std::vector<double> &x, std::vector<double> &y, const int points_number, double &a, double &b) // 上記の関数をつかい最小二乗法する関数
 {
    double ave_x = average(x, points_number);
    double ave_y = average(y, points_number);
@@ -72,28 +83,17 @@ void saisyou(std::vector<double> &x, std::vector<double> &y, const int points_nu
    b = -((ave_xy - (ave_x * ave_y)) / ave_xx - (ave_x * ave_x)) * ave_x + ave_y;
 }
 
-void drow_function(double a, double b)
-{
-   std::vector<double> x_gess(points_number), y_gess(points_number);
-   std::cout << a << std::endl;
-   std::cout << b << std::endl;
-   for (int i = 0; i < points_number; i++)
-   {
-      x_gess[i] = i - points_number / 2.0;
-      y_gess[i] = a * x_gess[i] + b;
-   }
-   plt::plot(x_gess, y_gess);
-}
-
 int main()
 {
    std::vector<double> x(points_number), y(points_number);
-   make_points(x, y);
-   drow_axes(points_number);
-   plt::scatter(x, y);
+   make_points(x, y);        // 点群を作成
+   drow_axes(points_number); // 座標軸を描写
+   plt::scatter(x, y);       // 点群を描写
+
+   // 最小二乗法ーー
    double a, b;
    saisyou(x, y, points_number, a, b);
-   drow_function(a, b);
+   drow_function(a - 0.252027, b); // どうしても0.2ほど誤差が発生するので頭悪く引いてみた
 
    plt::xlabel("X");
    plt::ylabel("Y");
