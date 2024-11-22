@@ -8,8 +8,8 @@
 
 namespace plt = matplotlibcpp;
 
-const int points_number = 750;
-const int line_number = 2;
+const int points_number = 7500;
+const int line_number = 5;
 const bool line_drow_on = true;
 const bool points_drow_on = true;
 const bool axes_drow_on = true;
@@ -101,7 +101,7 @@ line ransac(std::vector<double> x, std::vector<double> y, int max_iterations, do
             ++inliers_count;
             inliers[j] = true;
          }
-         std::cout << j << std::endl;
+         // std::cout << j << std::endl;
       }
       if (inliers_count > best_inliers_count)
       {
@@ -138,10 +138,9 @@ int main()
 
    // ransac--------
 
-   int max_iterations = 35;
-   double threshold = 30.0;
+   int max_iterations = 35;  // 試行回数
+   double threshold = 300.0; // 振れ幅
    std::vector<double> now_line_x = original_line_x, now_line_y = original_line_y;
-   // std::array<std::vector<bool>, line_number> inlier;inlier[j] =
    std::vector<bool> inliers(points_number, false); // 点が闘値内にあるかどうかを判定する変数
    for (int j = 0; j < line_number; j++)
    {
