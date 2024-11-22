@@ -92,7 +92,7 @@ int main()
    // 最小二乗法ーー
    double a, b;
    saisyou(x, y, points_number, a, b);
-   drow_function(a, b); // どうしても0.2ほど誤差が発生するので頭悪く引いてみた
+   drow_function(a, b);
 
    std::cout << "傾き:" << a << std::endl;
    std::cout << "切片:" << b << std::endl;
