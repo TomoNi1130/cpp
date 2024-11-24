@@ -62,7 +62,7 @@ void make_random_points(line line, double amplitude, std::vector<double> &_x, st
    }
 }
 
-void make_outliners(std::vector<double> &y, const int outliers_number) // なんか座標軸上に移動させまくるバグが発生中(なんでや)
+void make_outliners(std::vector<double> &y, const int outliers_number)
 {
    std::random_device rd;
    std::mt19937 gen(rd());

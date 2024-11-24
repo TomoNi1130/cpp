@@ -19,21 +19,21 @@ int main()
    make_random_points(first_line, 10.0, points_cloud_x, points_cloud_y, is_inlier);
    make_random_points(second_line, 20.0, points_cloud_x, points_cloud_y, is_inlier); // 上で作った直線に沿ってランダムに点を散らす
    make_random_points(third_line, 10.0, points_cloud_x, points_cloud_y, is_inlier);
-   // make_outliners(points_cloud_y, points_cloud_y.size() / 4);
-   // make_outliners(points_cloud_x, points_cloud_x.size() / 4);
+   make_outliners(points_cloud_y, points_cloud_y.size() / 4);
+   make_outliners(points_cloud_x, points_cloud_x.size() / 4);
    drow_axes(points_number);
    plt::scatter(points_cloud_x, points_cloud_y, 1.0); // 点群を描写
    std::cout << "傾き(目標1):" << first_line.slope << "切片(目標1):" << first_line.intercept << std::endl;
    std::cout << "傾き(目標2):" << second_line.slope << "切片(目標2):" << second_line.intercept << std::endl;
    std::cout << "傾き(目標3):" << third_line.slope << "切片(目標3):" << third_line.intercept << std::endl;
 
-   // ransac
+   // ransac---------
    for (int i = 0; i < line_number; i++)
    {
       line gess_line = ransac(points_cloud_x, points_cloud_y, is_inlier);
       drow_function(gess_line);
       std::cout << "傾き(予測" << i + 1 << "):" << gess_line.slope << "切片(予測" << i + 1 << "):" << gess_line.intercept << std::endl;
    }
-
+   //-------------
    plt::show();
 }
