@@ -35,5 +35,8 @@ int main()
       std::cout << "傾き(予測" << i + 1 << "):" << gess_line.slope << "切片(予測" << i + 1 << "):" << gess_line.intercept << std::endl;
    }
    //-------------
+
+   plt::xlabel("X");
+   plt::ylabel("Y");
    plt::show();
 }

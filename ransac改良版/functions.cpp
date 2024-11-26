@@ -8,8 +8,8 @@
 
 namespace plt = matplotlibcpp;
 
-int max_iterations = 100; // ransac内での試行回数
-double threshold = 15.0;  // 闘値
+int max_iterations = 35; // ransac内での試行回数
+double threshold = 10.0; // 闘値
 
 const int line_number = 3; // 線の数
 int points_number = 750;   // 一つの線ごとの点の数
