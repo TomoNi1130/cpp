@@ -1,0 +1,3 @@
+/mnt/c/study/language/cpp/ransac新改良版/build/CMakeFiles/plt.dir
+/mnt/c/study/language/cpp/ransac新改良版/build/CMakeFiles/edit_cache.dir
+/mnt/c/study/language/cpp/ransac新改良版/build/CMakeFiles/rebuild_cache.dir

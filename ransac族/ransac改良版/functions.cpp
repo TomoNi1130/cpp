@@ -2,7 +2,6 @@
 #include <iostream>
 #include <vector>
 #include <random>
-#include <vector>
 
 #include "matplotlibcpp.h"
 
@@ -48,7 +47,7 @@ void drow_function(line line) // 一次関数のグラフを書く関数
    plt::plot(x_gess, y_gess, "r-");
 }
 
-void make_random_points(line line, double amplitude, std::vector<double> &_x, std::vector<double> &_y) // amplitude = 振れ幅, std::vector<bool> &inliers
+void make_random_points(line line, double amplitude, std::vector<double> &_x, std::vector<double> &_y) // amplitude = 振れ幅
 {
    std::random_device rnd;
    std::mt19937 mt(rnd());
@@ -58,7 +57,6 @@ void make_random_points(line line, double amplitude, std::vector<double> &_x, st
    {
       _x.emplace_back(i - points_number / 2);
       _y.emplace_back(line.slope * (i - points_number / 2) + line.intercept + dist(mt));
-      // inliers.emplace_back(false);
    }
 }
 

@@ -27,6 +27,7 @@ int main()
    std::cout << "傾き(目標2):" << second_line.slope << "切片(目標2):" << second_line.intercept << std::endl;
    std::cout << "傾き(目標3):" << third_line.slope << "切片(目標3):" << third_line.intercept << std::endl;
    std::vector<bool> is_inlier(points_cloud_x.size(), false);
+
    // ransac---------
    for (int i = 0; i < line_number; i++)
    {
