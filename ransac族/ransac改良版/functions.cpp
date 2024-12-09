@@ -99,7 +99,6 @@ line ransac(std::vector<double> &_x, std::vector<double> &_y, std::vector<bool> 
    int best_inliers_count = 0;
    for (int i = 0; i < max_iterations; i++)
    {
-
       int idx1 = dis(gen);
       int idx2 = dis(gen);
       std::fill(gess_inliers.begin(), gess_inliers.end(), false);

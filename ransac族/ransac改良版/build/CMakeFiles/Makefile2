@@ -54,10 +54,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /mnt/c/study/language/cpp/ransac改良版
+CMAKE_SOURCE_DIR = /mnt/c/study/language/cpp/ransac族/ransac改良版
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /mnt/c/study/language/cpp/ransac改良版/build
+CMAKE_BINARY_DIR = /mnt/c/study/language/cpp/ransac族/ransac改良版/build
 
 #=============================================================================
 # Directory level rules for the build root directory
@@ -81,14 +81,14 @@ clean: CMakeFiles/plt.dir/clean
 CMakeFiles/plt.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/plt.dir/build.make CMakeFiles/plt.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/plt.dir/build.make CMakeFiles/plt.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/mnt/c/study/language/cpp/ransac改良版/build/CMakeFiles --progress-num=1,2 "Built target plt"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/mnt/c/study/language/cpp/ransac族/ransac改良版/build/CMakeFiles --progress-num=1,2 "Built target plt"
 .PHONY : CMakeFiles/plt.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/plt.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/study/language/cpp/ransac改良版/build/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/study/language/cpp/ransac族/ransac改良版/build/CMakeFiles 2
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/plt.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/study/language/cpp/ransac改良版/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/study/language/cpp/ransac族/ransac改良版/build/CMakeFiles 0
 .PHONY : CMakeFiles/plt.dir/rule
 
 # Convenience name for target.

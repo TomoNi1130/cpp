@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/mnt/c/study/language/cpp/ransac改良版/functions.cpp -isystem /usr/include/python3.12 -isystem /usr/lib/python3/dist-packages/numpy/core/include
+CXX_INCLUDES = -I/mnt/c/study/language/cpp/ransac族/ransac改良版/functions.cpp -isystem /usr/include/python3.12 -isystem /usr/lib/python3/dist-packages/numpy/core/include
 
 CXX_FLAGS = -std=gnu++11
 

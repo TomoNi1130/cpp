@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.10)
 #project(プロジェクト名 CXX)
-project(plt)
+project("plt")
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(
-  plt main.cpp
+add_executable(plt
+  a.cpp 
 )
 
 find_package(Python3 COMPONENTS Development NumPy)

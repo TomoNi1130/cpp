@@ -57,10 +57,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /mnt/c/study/language/cpp/ransac新改良版
+CMAKE_SOURCE_DIR = /mnt/c/study/language/cpp/ransac族/シンransac
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /mnt/c/study/language/cpp/ransac新改良版/build
+CMAKE_BINARY_DIR = /mnt/c/study/language/cpp/ransac族/シンransac/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,9 +87,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/study/language/cpp/ransac新改良版/build/CMakeFiles /mnt/c/study/language/cpp/ransac新改良版/build//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/study/language/cpp/ransac族/シンransac/build/CMakeFiles /mnt/c/study/language/cpp/ransac族/シンransac/build//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/study/language/cpp/ransac新改良版/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/study/language/cpp/ransac族/シンransac/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -129,29 +129,29 @@ plt/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/plt.dir/build.make CMakeFiles/plt.dir/build
 .PHONY : plt/fast
 
-main.o: main.cpp.o
-.PHONY : main.o
+a.o: a.cpp.o
+.PHONY : a.o
 
 # target to build an object file
-main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/plt.dir/build.make CMakeFiles/plt.dir/main.cpp.o
-.PHONY : main.cpp.o
+a.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/plt.dir/build.make CMakeFiles/plt.dir/a.cpp.o
+.PHONY : a.cpp.o
 
-main.i: main.cpp.i
-.PHONY : main.i
+a.i: a.cpp.i
+.PHONY : a.i
 
 # target to preprocess a source file
-main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/plt.dir/build.make CMakeFiles/plt.dir/main.cpp.i
-.PHONY : main.cpp.i
+a.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/plt.dir/build.make CMakeFiles/plt.dir/a.cpp.i
+.PHONY : a.cpp.i
 
-main.s: main.cpp.s
-.PHONY : main.s
+a.s: a.cpp.s
+.PHONY : a.s
 
 # target to generate assembly for a file
-main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/plt.dir/build.make CMakeFiles/plt.dir/main.cpp.s
-.PHONY : main.cpp.s
+a.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/plt.dir/build.make CMakeFiles/plt.dir/a.cpp.s
+.PHONY : a.cpp.s
 
 # Help Target
 help:
@@ -162,9 +162,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... plt"
-	@echo "... main.o"
-	@echo "... main.i"
-	@echo "... main.s"
+	@echo "... a.o"
+	@echo "... a.i"
+	@echo "... a.s"
 .PHONY : help
 
 

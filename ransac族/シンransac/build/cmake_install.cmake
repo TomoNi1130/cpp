@@ -1,4 +1,4 @@
-# Install script for directory: /mnt/c/study/language/cpp/ransac新改良版
+# Install script for directory: /mnt/c/study/language/cpp/ransac族/シンransac
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -50,5 +50,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/mnt/c/study/language/cpp/ransac新改良版/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/mnt/c/study/language/cpp/ransac族/シンransac/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

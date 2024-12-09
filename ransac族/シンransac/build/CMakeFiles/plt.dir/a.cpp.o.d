@@ -1,8 +1,7 @@
-CMakeFiles/plt.dir/main.cpp.o: \
- /mnt/c/study/language/cpp/ransac族/ransac改良版/main.cpp \
- /usr/include/stdc-predef.h \
- /mnt/c/study/language/cpp/ransac族/ransac改良版/functions.cpp \
- /usr/include/c++/13/iostream /usr/include/c++/13/bits/requires_hosted.h \
+CMakeFiles/plt.dir/a.cpp.o: \
+ /mnt/c/study/language/cpp/ransac族/シンransac/a.cpp \
+ /usr/include/stdc-predef.h /usr/include/c++/13/iostream \
+ /usr/include/c++/13/bits/requires_hosted.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/os_defines.h \
  /usr/include/features.h /usr/include/features-time64.h \
@@ -169,7 +168,13 @@ CMakeFiles/plt.dir/main.cpp.o: \
  /usr/include/x86_64-linux-gnu/c++/13/bits/opt_random.h \
  /usr/include/c++/13/bits/random.tcc /usr/include/c++/13/numeric \
  /usr/include/c++/13/bits/stl_numeric.h \
- /mnt/c/study/language/cpp/ransac族/ransac改良版/matplotlibcpp.h \
+ /mnt/c/study/language/cpp/ransac族/シンransac/sbb.cpp \
+ /usr/include/c++/13/array /usr/include/c++/13/compare \
+ /usr/include/c++/13/algorithm /usr/include/c++/13/bits/stl_algo.h \
+ /usr/include/c++/13/bits/algorithmfwd.h \
+ /usr/include/c++/13/bits/stl_heap.h \
+ /usr/include/c++/13/bits/stl_tempbuf.h \
+ /mnt/c/study/language/cpp/ransac族/シンransac/matplotlibcpp.h \
  /usr/include/python3.12/Python.h /usr/include/python3.12/patchlevel.h \
  /usr/include/python3.12/pyconfig.h \
  /usr/include/x86_64-linux-gnu/python3.12/pyconfig.h \
@@ -305,12 +310,7 @@ CMakeFiles/plt.dir/main.cpp.o: \
  /usr/include/c++/13/bits/stl_map.h /usr/include/c++/13/tuple \
  /usr/include/c++/13/bits/uses_allocator.h \
  /usr/include/c++/13/bits/stl_multimap.h \
- /usr/include/c++/13/bits/erase_if.h /usr/include/c++/13/array \
- /usr/include/c++/13/compare /usr/include/c++/13/algorithm \
- /usr/include/c++/13/bits/stl_algo.h \
- /usr/include/c++/13/bits/algorithmfwd.h \
- /usr/include/c++/13/bits/stl_heap.h \
- /usr/include/c++/13/bits/stl_tempbuf.h /usr/include/c++/13/functional \
+ /usr/include/c++/13/bits/erase_if.h /usr/include/c++/13/functional \
  /usr/include/c++/13/bits/std_function.h \
  /usr/lib/python3/dist-packages/numpy/core/include/numpy/arrayobject.h \
  /usr/lib/python3/dist-packages/numpy/core/include/numpy/ndarrayobject.h \
