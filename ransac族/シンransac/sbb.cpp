@@ -32,35 +32,25 @@ public:
    {
       all_line_number = line_number;
       all_points_number = points_number;
-
-      for (int i = 0; i < all_points_number; i++)
-      {
-         _inliers.push_back(false);
-      }
-   }
-   void set_points_cloud(std::vector<double> const &x, std::vector<double> const &y)
-   {
-      _x = x;
-      _y = y;
+      _inliers.resize(all_points_number, false);
    }
    void draw_points_cloud()
    {
-      std::vector<double> x(std::begin(_x), std::end(_x));
-      std::vector<double> y(std::begin(_y), std::end(_y));
-      plt::scatter(x, y);
+      plt::scatter(_x, _y);
    }
    void make_points_cloud()
    {
       std::random_device rad;
       std::mt19937 random(rad());
       std::uniform_real_distribution<double> dist(-5.0f, 5.0f);
-      std::vector<double> x, y;
+
+      _x.resize(all_points_number);
+      _y.resize(all_points_number);
       for (int i = 0; i < all_points_number; i++)
       {
-         x.push_back(dist(random) / 2);
-         y.push_back(dist(random));
+         _x[i] = dist(random) / 2;
+         _y[i] = dist(random);
       }
-      set_points_cloud(x, y);
    }
    void ransac(const int max_iterations, const double threshold, int const Minimum_guarantee) // 試行回数，闘値，最低保証(inlier下限)
    {
@@ -71,7 +61,7 @@ public:
 
       for (int line_num = 0; line_num < all_line_number; line_num++) // 決まった数だけ線分を書く//line_segment(線分)を求める
       {
-         std::vector<bool> best_inliers;
+         std::vector<bool> best_inliers(_x.size(), false);
          line_segment best_model;
          int best_inliers_count = 0;
 
@@ -110,22 +100,21 @@ public:
             }
          }
          if (best_inliers_count < Minimum_guarantee && ransac_lines.size() > all_line_number / 2)
-            line_num = all_line_number;
+            break;
          for (int i = 0; i < all_points_number; i++)
          {
             if (best_inliers[i])
                _inliers[i] = true;
          }
          ransac_lines.push_back(best_model);
-         // draw_line(best_model);
       }
    }
 
    void draw_ransac_lines()
    {
-      for (int i = 0; i < ransac_lines.size(); i++)
+      for (const auto &line : ransac_lines) // この書き方は知らなかった(AIに聞いた)
       {
-         draw_line(ransac_lines[i]);
+         draw_line(line);
       }
    }
 
@@ -157,7 +146,7 @@ private:
       line guess_line;
       guess_line.a = y_2 - y_1;
       guess_line.b = x_2 - x_1;
-      guess_line.c = y_1 - (x_1 * y_2 - x_1 * y_1) / (x_2 - x_1);
+      guess_line.c = y_1 * x_2 - x_1 * y_2;
       return guess_line;
    }
 
