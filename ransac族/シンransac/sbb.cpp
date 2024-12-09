@@ -26,6 +26,8 @@ class pointsProcess
 public:
    std::vector<double> _x, _y;
    std::vector<bool> _inliers; // 直線の近くにある点を記録するための配列(線の重複を防ぐため)
+   std::vector<line_segment> ransac_lines;
+
    pointsProcess(const int line_number, const int points_number)
    {
       all_line_number = line_number;
@@ -36,7 +38,7 @@ public:
          _inliers.push_back(false);
       }
    }
-   void set_points_cloud(std::vector<double> &x, std::vector<double> &y)
+   void set_points_cloud(std::vector<double> const &x, std::vector<double> const &y)
    {
       _x = x;
       _y = y;
@@ -47,7 +49,20 @@ public:
       std::vector<double> y(std::begin(_y), std::end(_y));
       plt::scatter(x, y);
    }
-   void ransac(const int max_iterations, const double threshold)
+   void make_points_cloud()
+   {
+      std::random_device rad;
+      std::mt19937 random(rad());
+      std::uniform_real_distribution<double> dist(-5.0f, 5.0f);
+      std::vector<double> x, y;
+      for (int i = 0; i < all_points_number; i++)
+      {
+         x.push_back(dist(random) / 2);
+         y.push_back(dist(random));
+      }
+      set_points_cloud(x, y);
+   }
+   void ransac(const int max_iterations, const double threshold, int const Minimum_guarantee) // 試行回数，闘値，最低保証(inlier下限)
    {
       std::cout << "ransac" << std::endl;
       std::random_device rd;
@@ -94,14 +109,30 @@ public:
                best_model.high_x = *max_element(begin(in_line_x), end(in_line_x));
             }
          }
+         if (best_inliers_count < Minimum_guarantee && ransac_lines.size() > all_line_number / 2)
+            line_num = all_line_number;
          for (int i = 0; i < all_points_number; i++)
          {
             if (best_inliers[i])
                _inliers[i] = true;
          }
-         draw_line(best_model);
+         ransac_lines.push_back(best_model);
+         // draw_line(best_model);
       }
-   };
+   }
+
+   void draw_ransac_lines()
+   {
+      for (int i = 0; i < ransac_lines.size(); i++)
+      {
+         draw_line(ransac_lines[i]);
+      }
+   }
+
+private:
+   int all_line_number;
+   int all_points_number; // すべての点の合計数
+   int now_line_number = 0;
    void draw_line(line_segment const line)
    {
       std::vector<double> x, y;
@@ -115,12 +146,6 @@ public:
       plt::plot(x, y);
       now_line_number++;
    }
-
-private:
-   int all_line_number;
-   int all_points_number; // すべての点の合計数
-   int now_line_number = 0;
-
    double calculate_error(const double x, const double y, const line &model) // 誤差を求める
    {
       double y_est = (model.a * x + model.c) / model.b;
@@ -137,16 +162,3 @@ private:
    }
 
 }; // pointsProcess
-
-void make_points_cloud(std::vector<double> &x, std::vector<double> &y, int const points_number)
-{
-   std::random_device rad;
-   std::mt19937 random(rad());
-   std::uniform_real_distribution<double> dist(-5.0f, 5.0f);
-
-   for (int i = 0; i < points_number; i++)
-   {
-      x.push_back(dist(random) / 2);
-      y.push_back(dist(random));
-   }
-}
