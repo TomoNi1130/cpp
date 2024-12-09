@@ -174,7 +174,7 @@ CMakeFiles/plt.dir/a.cpp.o: \
  /usr/include/c++/13/bits/algorithmfwd.h \
  /usr/include/c++/13/bits/stl_heap.h \
  /usr/include/c++/13/bits/stl_tempbuf.h \
- /mnt/c/study/language/cpp/ransac族/シンransac/matplotlibcpp.h \
+ /mnt/c/study/language/cpp/ransac族/シンransac/../include/matplotlibcpp.h \
  /usr/include/python3.12/Python.h /usr/include/python3.12/patchlevel.h \
  /usr/include/python3.12/pyconfig.h \
  /usr/include/x86_64-linux-gnu/python3.12/pyconfig.h \

@@ -112,7 +112,7 @@ public:
 
    void draw_ransac_lines()
    {
-      for (const auto &line : ransac_lines) // この書き方は知らなかった(AIに聞いた)
+      for (const line_segment &line : ransac_lines) // この書き方は知らなかった(AIに聞いた)
       {
          draw_line(line);
       }

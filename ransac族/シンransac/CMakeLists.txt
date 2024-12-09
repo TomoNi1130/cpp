@@ -4,8 +4,10 @@ project("plt")
 
 set(CMAKE_CXX_STANDARD 11)
 
+include_directories(../include)
+
 add_executable(plt
-  a.cpp 
+  main.cpp 
 )
 
 find_package(Python3 COMPONENTS Development NumPy)

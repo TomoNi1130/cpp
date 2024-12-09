@@ -21,6 +21,8 @@ set(CMAKE_CXX_STANDARD 11)
 #   add_compile_options(-Wall -Wextra -Wpedantic)
 # endif()
 
+include_directories(../include)
+
 # Include Python headers
 add_executable(
   plt main.cpp
