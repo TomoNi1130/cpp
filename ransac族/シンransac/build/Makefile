@@ -129,29 +129,29 @@ plt/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/plt.dir/build.make CMakeFiles/plt.dir/build
 .PHONY : plt/fast
 
-a.o: a.cpp.o
-.PHONY : a.o
+main.o: main.cpp.o
+.PHONY : main.o
 
 # target to build an object file
-a.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/plt.dir/build.make CMakeFiles/plt.dir/a.cpp.o
-.PHONY : a.cpp.o
+main.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/plt.dir/build.make CMakeFiles/plt.dir/main.cpp.o
+.PHONY : main.cpp.o
 
-a.i: a.cpp.i
-.PHONY : a.i
+main.i: main.cpp.i
+.PHONY : main.i
 
 # target to preprocess a source file
-a.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/plt.dir/build.make CMakeFiles/plt.dir/a.cpp.i
-.PHONY : a.cpp.i
+main.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/plt.dir/build.make CMakeFiles/plt.dir/main.cpp.i
+.PHONY : main.cpp.i
 
-a.s: a.cpp.s
-.PHONY : a.s
+main.s: main.cpp.s
+.PHONY : main.s
 
 # target to generate assembly for a file
-a.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/plt.dir/build.make CMakeFiles/plt.dir/a.cpp.s
-.PHONY : a.cpp.s
+main.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/plt.dir/build.make CMakeFiles/plt.dir/main.cpp.s
+.PHONY : main.cpp.s
 
 # Help Target
 help:
@@ -162,9 +162,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... plt"
-	@echo "... a.o"
-	@echo "... a.i"
-	@echo "... a.s"
+	@echo "... main.o"
+	@echo "... main.i"
+	@echo "... main.s"
 .PHONY : help
 
 

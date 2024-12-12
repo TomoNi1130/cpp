@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/plt.dir/a.cpp.o"
-  "CMakeFiles/plt.dir/a.cpp.o.d"
+  "CMakeFiles/plt.dir/main.cpp.o"
+  "CMakeFiles/plt.dir/main.cpp.o.d"
   "plt"
   "plt.pdb"
 )

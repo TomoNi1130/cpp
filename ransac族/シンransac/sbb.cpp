@@ -11,7 +11,7 @@ namespace plt = matplotlibcpp;
 struct line_segment
 {
    // 線分にするためのデータ
-   double low_x, high_x;
+   double low_x, high_x, low_y, high_y;
    // ax+by+c = 0  y= a/b*x+c/b
    double a, b, c;
 };
@@ -24,10 +24,6 @@ struct line
 class pointsProcess
 {
 public:
-   std::vector<double> _x, _y;
-   std::vector<bool> _inliers; // 直線の近くにある点を記録するための配列(線の重複を防ぐため)
-   std::vector<line_segment> ransac_lines;
-
    pointsProcess(const int line_number, const int points_number)
    {
       all_line_number = line_number;
@@ -48,7 +44,7 @@ public:
       _y.resize(all_points_number);
       for (int i = 0; i < all_points_number; i++)
       {
-         _x[i] = dist(random) / 2;
+         _x[i] = dist(random);
          _y[i] = dist(random);
       }
    }
@@ -69,6 +65,7 @@ public:
          {
             std::vector<bool> guess_inliers(_x.size(), false);
             std::vector<double> in_line_x(0); // inlierのx座標を記録するやつ//線分にする
+            std::vector<double> in_line_y(0); // inlierのx座標を記録するやつ//線分にする
             int guess_inliers_count = 0;
 
             int idx1 = dis(gen);
@@ -79,13 +76,14 @@ public:
             }
             line guess_model = fit_line(_x[idx1], _y[idx1], _x[idx2], _y[idx2]);
 
-            for (int j = 0; j < _x.size(); j++)
+            for (std::vector<double>::size_type j = 0; j < _x.size(); j++)
             {
                if (!_inliers[j] && calculate_error(_x[j], _y[j], guess_model) < threshold) // 予測グラフと，各点の誤差が闘値以下であれば，
                {
                   ++guess_inliers_count;
                   guess_inliers[j] = true;
                   in_line_x.push_back(_x[j]);
+                  in_line_y.push_back(_y[j]);
                }
             }
             if (guess_inliers_count > best_inliers_count)
@@ -97,6 +95,8 @@ public:
                best_model.c = guess_model.c;
                best_model.low_x = *min_element(begin(in_line_x), end(in_line_x));
                best_model.high_x = *max_element(begin(in_line_x), end(in_line_x));
+               best_model.high_y = *max_element(begin(in_line_y), end(in_line_y));
+               best_model.low_y = *min_element(begin(in_line_y), end(in_line_y));
             }
          }
          if (best_inliers_count < Minimum_guarantee && ransac_lines.size() > all_line_number / 2)
@@ -112,36 +112,51 @@ public:
 
    void draw_ransac_lines()
    {
-      for (const line_segment &line : ransac_lines) // この書き方は知らなかった(AIに聞いた)
+      for (const line_segment line : ransac_lines) // この書き方は知らなかった(AIに聞いた)
       {
          draw_line(line);
       }
    }
 
 private:
+   std::vector<double> _x, _y;
+   std::vector<bool> _inliers; // 直線の近くにある点を記録するための配列(線の重複を防ぐため)
+   std::vector<line_segment> ransac_lines;
    int all_line_number;
    int all_points_number; // すべての点の合計数
    int now_line_number = 0;
-   void draw_line(line_segment const line)
+   void draw_line(line_segment const &line)
    {
       std::vector<double> x, y;
       double x_width = line.high_x - line.low_x;
+      double y_width = line.high_y - line.low_y;
       std::cout << "line" << now_line_number + 1 << ":" << line.high_x << "~" << line.low_x << std::endl;
-      for (int i = 0; i < 2; i++)
+      if (x_width > y_width)
       {
-         x.push_back(line.low_x + x_width * i);
-         y.push_back(line.a / line.b * (line.low_x + x_width * i) + line.c / line.b);
+         for (int i = 0; i < 2; i++)
+         {
+            x.push_back(line.low_x + x_width * i);
+            y.push_back(-(line.a / line.b * (line.low_x + x_width * i)) - line.c / line.b);
+         }
+      }
+      else
+      {
+         for (int i = 0; i < 2; i++)
+         {
+            y.push_back(line.low_y + y_width * i);
+            x.push_back(-(line.b / line.a * (line.low_y + y_width * i)) - line.c / line.a);
+         }
       }
       plt::plot(x, y);
       now_line_number++;
    }
-   double calculate_error(const double x, const double y, const line &model) // 誤差を求める
+   double calculate_error(const double &x, const double &y, const line &model) // 誤差を求める
    {
-      double y_est = (model.a * x + model.c) / model.b;
-      return std::fabs(y - y_est); // 差の絶対値を返す
+      double error = abs(model.a * x + model.b * y + model.c) / std::sqrt(model.a * model.a + model.b * model.b);
+      return error; // 差の絶対値を返す
    }
 
-   line fit_line(double x_1, double y_1, double x_2, double y_2) // 二点の距離から直線を割り出す
+   line fit_line(double &x_1, double &y_1, double &x_2, double &y_2) // 二点の距離から直線を割り出す
    {
       line guess_line;
       guess_line.a = y_2 - y_1;

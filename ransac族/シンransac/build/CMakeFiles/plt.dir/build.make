@@ -69,28 +69,28 @@ include CMakeFiles/plt.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/plt.dir/flags.make
 
-CMakeFiles/plt.dir/a.cpp.o: CMakeFiles/plt.dir/flags.make
-CMakeFiles/plt.dir/a.cpp.o: /mnt/c/study/language/cpp/ransac族/シンransac/a.cpp
-CMakeFiles/plt.dir/a.cpp.o: CMakeFiles/plt.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/mnt/c/study/language/cpp/ransac族/シンransac/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/plt.dir/a.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/plt.dir/a.cpp.o -MF CMakeFiles/plt.dir/a.cpp.o.d -o CMakeFiles/plt.dir/a.cpp.o -c /mnt/c/study/language/cpp/ransac族/シンransac/a.cpp
+CMakeFiles/plt.dir/main.cpp.o: CMakeFiles/plt.dir/flags.make
+CMakeFiles/plt.dir/main.cpp.o: /mnt/c/study/language/cpp/ransac族/シンransac/main.cpp
+CMakeFiles/plt.dir/main.cpp.o: CMakeFiles/plt.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/mnt/c/study/language/cpp/ransac族/シンransac/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/plt.dir/main.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/plt.dir/main.cpp.o -MF CMakeFiles/plt.dir/main.cpp.o.d -o CMakeFiles/plt.dir/main.cpp.o -c /mnt/c/study/language/cpp/ransac族/シンransac/main.cpp
 
-CMakeFiles/plt.dir/a.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/plt.dir/a.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/study/language/cpp/ransac族/シンransac/a.cpp > CMakeFiles/plt.dir/a.cpp.i
+CMakeFiles/plt.dir/main.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/plt.dir/main.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/study/language/cpp/ransac族/シンransac/main.cpp > CMakeFiles/plt.dir/main.cpp.i
 
-CMakeFiles/plt.dir/a.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/plt.dir/a.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/study/language/cpp/ransac族/シンransac/a.cpp -o CMakeFiles/plt.dir/a.cpp.s
+CMakeFiles/plt.dir/main.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/plt.dir/main.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/study/language/cpp/ransac族/シンransac/main.cpp -o CMakeFiles/plt.dir/main.cpp.s
 
 # Object files for target plt
 plt_OBJECTS = \
-"CMakeFiles/plt.dir/a.cpp.o"
+"CMakeFiles/plt.dir/main.cpp.o"
 
 # External object files for target plt
 plt_EXTERNAL_OBJECTS =
 
-plt: CMakeFiles/plt.dir/a.cpp.o
+plt: CMakeFiles/plt.dir/main.cpp.o
 plt: CMakeFiles/plt.dir/build.make
 plt: /usr/lib/x86_64-linux-gnu/libpython3.12.so
 plt: CMakeFiles/plt.dir/link.txt
