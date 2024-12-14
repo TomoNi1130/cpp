@@ -16,6 +16,10 @@ struct line_segment
    double low_x, high_x, low_y, high_y;
    // ax+by+c = 0  y= a/b*x+c/b
    double a, b, c;
+
+   double distance; // 原点との距離
+
+   double theta; // 角度
 };
 
 struct line
@@ -117,6 +121,7 @@ public:
                best_model.low_y = *min_element(begin(in_line_y), end(in_line_y));
             }
          }
+
          if (best_inliers_count < Minimum_guarantee && ransac_lines.size() > all_line_number / 2)
             break;
          for (int i = 0; i < all_points_number; i++)
@@ -125,6 +130,8 @@ public:
                _inliers[i] = true;
          }
          ransac_lines.push_back(best_model);
+         ransac_lines[line_num].distance = get_distance_line(line_num);
+         ransac_lines[line_num].theta = get_theta(line_num);
       }
    }
 
@@ -136,9 +143,50 @@ public:
       }
    }
 
+private:
+   std::vector<double> _x, _y;
+   std::vector<bool> _inliers; // 直線の近くにある点を記録するための配列(線の重複を防ぐため)
+   std::vector<line_segment> ransac_lines;
+   int all_line_number;
+   int all_points_number; // すべての点の合計数
+   int now_line_number = 0;
+
+   double get_theta(int line_number)
+   {
+      int get_line_number = line_number;
+      double slope = ransac_lines[get_line_number].b / ransac_lines[get_line_number].a;
+      plt::plot(std::vector<double>{ransac_lines[get_line_number].low_x, ransac_lines[get_line_number].high_x}, std::vector<double>{slope * ransac_lines[get_line_number].low_x, slope * ransac_lines[get_line_number].high_x});
+      if (-(ransac_lines[get_line_number].a / ransac_lines[get_line_number].b) < 0)
+      {
+         if (-ransac_lines[get_line_number].c / ransac_lines[get_line_number].b > 0)
+         {
+            std::cout << "theta_line " << line_number + 1 << " :" << std::atan(slope) * 180.0 / pi << std::endl;
+            return std::atan(slope); // 第一象限
+         }
+         else
+         {
+            std::cout << "theta_line " << line_number + 1 << " :" << (std::atan(slope) + pi) * 180.0 / pi << std::endl;
+            return std::atan(slope) + pi; // 第三象限
+         }
+      }
+      else
+      {
+         if (-ransac_lines[get_line_number].c / ransac_lines[get_line_number].b > 0)
+         {
+            std::cout << "theta_line " << line_number + 1 << " :" << (std::atan(slope) + pi) * 180.0 / pi << std::endl;
+            return std::atan(slope) + pi; // 第二象限
+         }
+         else
+         {
+            std::cout << "theta_line " << line_number + 1 << " :" << (std::atan(slope) + 2 * pi) * 180.0 / pi << std::endl;
+            return std::atan(slope) + 2 * pi; // 第四象限
+         }
+      }
+   }
+
    double get_distance_line(int line_number)
    {
-      int get_line_number = line_number - 1;
+      int get_line_number = line_number;
       double x2 = ransac_lines[get_line_number].high_x;
       double x1 = ransac_lines[get_line_number].low_x;
       double y2 = ransac_lines[get_line_number].high_y;
@@ -152,59 +200,18 @@ public:
       double tt = -(a * x1 + b * y1);
       if (tt < 0)
       {
-         std::cout << "distance_line " << line_number << " :" << sqrt(x1 * x1 + y1 * y1) << std::endl;
+         std::cout << "distance_line " << line_number + 1 << ":" << sqrt(x1 * x1 + y1 * y1) << std::endl;
          return sqrt(x1 * x1 + y1 * y1);
       }
       if (tt > r2)
       {
-         std::cout << "distance_line " << line_number << " :" << sqrt(x2 * x2 + y2 * y2) << std::endl;
+         std::cout << "distance_line " << line_number + 1 << ":" << sqrt(x2 * x2 + y2 * y2) << std::endl;
          return sqrt(x2 * x2 + y2 * y2);
       }
       double f1 = a * y1 - b * x1;
-      std::cout << "distance_line " << line_number << " :" << sqrt((f1 * f1) / r2) << std::endl;
+      std::cout << "distance_line " << line_number + 1 << " :" << sqrt((f1 * f1) / r2) << std::endl;
       return sqrt((f1 * f1) / r2);
    }
-
-   double get_theta(int line_number)
-   {
-      int get_line_number = line_number - 1;
-      double slope = ransac_lines[get_line_number].b / ransac_lines[get_line_number].a;
-      plt::plot(std::vector<double>{ransac_lines[get_line_number].low_x, ransac_lines[get_line_number].high_x}, std::vector<double>{slope * ransac_lines[get_line_number].low_x, slope * ransac_lines[get_line_number].high_x});
-      if (-(ransac_lines[get_line_number].a / ransac_lines[get_line_number].b) < 0)
-      {
-         if (-ransac_lines[get_line_number].c / ransac_lines[get_line_number].b > 0)
-         {
-            std::cout << "theta_line " << line_number << " :" << std::atan(slope) * 180.0 / pi << std::endl;
-            return std::atan(slope); // 第一象限
-         }
-         else
-         {
-            std::cout << "theta_line " << line_number << " :" << (std::atan(slope) + pi) * 180.0 / pi << std::endl;
-            return std::atan(slope) + pi; // 第三象限
-         }
-      }
-      else
-      {
-         if (-ransac_lines[get_line_number].c / ransac_lines[get_line_number].b > 0)
-         {
-            std::cout << "theta_line " << line_number << " :" << (std::atan(slope) + pi) * 180.0 / pi << std::endl;
-            return std::atan(slope) + pi; // 第二象限
-         }
-         else
-         {
-            std::cout << "theta_line " << line_number << " :" << (std::atan(slope) + 2 * pi) * 180.0 / pi << std::endl;
-            return std::atan(slope) + 2 * pi; // 第四象限
-         }
-      }
-   }
-
-private:
-   std::vector<double> _x, _y;
-   std::vector<bool> _inliers; // 直線の近くにある点を記録するための配列(線の重複を防ぐため)
-   std::vector<line_segment> ransac_lines;
-   int all_line_number;
-   int all_points_number; // すべての点の合計数
-   int now_line_number = 0;
    void draw_line(line_segment const &line)
    {
       std::vector<double> x, y;

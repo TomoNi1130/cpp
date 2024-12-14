@@ -18,9 +18,6 @@ int main()
    cloud.ransac(10, 0.1, 100); // ransacの使用//引数は，試行回数，闘値，最低品質
    cloud.draw_ransac_lines();  // 描写
 
-   double distance = cloud.get_distance_line(1);
-   double theta = cloud.get_theta(1);
-
    plt::xlabel("X");
    plt::ylabel("Y");
    plt::show();
