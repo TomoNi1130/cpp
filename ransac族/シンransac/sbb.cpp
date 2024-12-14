@@ -152,35 +152,49 @@ public:
       double tt = -(a * x1 + b * y1);
       if (tt < 0)
       {
+         std::cout << "distance_line " << line_number << " :" << sqrt(x1 * x1 + y1 * y1) << std::endl;
          return sqrt(x1 * x1 + y1 * y1);
       }
       if (tt > r2)
       {
+         std::cout << "distance_line " << line_number << " :" << sqrt(x2 * x2 + y2 * y2) << std::endl;
          return sqrt(x2 * x2 + y2 * y2);
       }
       double f1 = a * y1 - b * x1;
+      std::cout << "distance_line " << line_number << " :" << sqrt((f1 * f1) / r2) << std::endl;
       return sqrt((f1 * f1) / r2);
    }
 
    double get_theta(int line_number)
    {
       int get_line_number = line_number - 1;
-      std::cout << "aran_line:" << ransac_lines[get_line_number].b / ransac_lines[get_line_number].a << std::endl;
       double slope = ransac_lines[get_line_number].b / ransac_lines[get_line_number].a;
       plt::plot(std::vector<double>{ransac_lines[get_line_number].low_x, ransac_lines[get_line_number].high_x}, std::vector<double>{slope * ransac_lines[get_line_number].low_x, slope * ransac_lines[get_line_number].high_x});
-      if (-(ransac_lines[get_line_number].b / ransac_lines[get_line_number].a) < 0)
+      if (-(ransac_lines[get_line_number].a / ransac_lines[get_line_number].b) < 0)
       {
-         if (ransac_lines[get_line_number].c > 0)
-            return std::atan(slope) - pi;
+         if (-ransac_lines[get_line_number].c / ransac_lines[get_line_number].b > 0)
+         {
+            std::cout << "theta_line " << line_number << " :" << std::atan(slope) * 180.0 / pi << std::endl;
+            return std::atan(slope); // 第一象限
+         }
          else
-            return std::atan(slope) + pi;
+         {
+            std::cout << "theta_line " << line_number << " :" << (std::atan(slope) + pi) * 180.0 / pi << std::endl;
+            return std::atan(slope) + pi; // 第三象限
+         }
       }
       else
       {
-         if (ransac_lines[get_line_number].c < 0)
-            return std::atan(slope) + 3 * pi;
+         if (-ransac_lines[get_line_number].c / ransac_lines[get_line_number].b > 0)
+         {
+            std::cout << "theta_line " << line_number << " :" << (std::atan(slope) + pi) * 180.0 / pi << std::endl;
+            return std::atan(slope) + pi; // 第二象限
+         }
          else
-            return std::atan(slope) + pi;
+         {
+            std::cout << "theta_line " << line_number << " :" << (std::atan(slope) + 2 * pi) * 180.0 / pi << std::endl;
+            return std::atan(slope) + 2 * pi; // 第四象限
+         }
       }
    }
 
@@ -196,8 +210,8 @@ private:
       std::vector<double> x, y;
       double x_width = line.high_x - line.low_x;
       double y_width = line.high_y - line.low_y;
-      std::cout << "line" << now_line_number + 1 << ":" << line.high_x << "~" << line.low_x << std::endl;
-      std::cout << "ransac_line:" << -(line.a / line.b) << std::endl;
+      std::cout << "line" << now_line_number + 1 << ":" << line.high_x << "~" << line.low_x << " a:" << line.a << " b:" << line.b << " c:" << line.c << std::endl;
+
       if (x_width > y_width)
       {
          for (int i = 0; i < 2; i++)

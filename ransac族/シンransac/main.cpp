@@ -21,9 +21,6 @@ int main()
    double distance = cloud.get_distance_line(1);
    double theta = cloud.get_theta(1);
 
-   std::cout << "distance:" << distance << std::endl;
-   std::cout << "theta:" << theta * 180 / pi << std::endl;
-
    plt::xlabel("X");
    plt::ylabel("Y");
    plt::show();
