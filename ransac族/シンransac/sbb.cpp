@@ -130,8 +130,8 @@ public:
                _inliers[i] = true;
          }
          ransac_lines.push_back(best_model);
-         ransac_lines[line_num].distance = get_distance_line(line_num);
-         ransac_lines[line_num].theta = get_theta(line_num);
+         ransac_lines.back().distance = get_distance_line(line_num);
+         ransac_lines.back().theta = get_theta(line_num);
       }
    }
 
@@ -154,31 +154,31 @@ private:
    double get_theta(int line_number)
    {
       int get_line_number = line_number;
-      double slope = ransac_lines[get_line_number].b / ransac_lines[get_line_number].a;
-      plt::plot(std::vector<double>{ransac_lines[get_line_number].low_x, ransac_lines[get_line_number].high_x}, std::vector<double>{slope * ransac_lines[get_line_number].low_x, slope * ransac_lines[get_line_number].high_x});
-      if (-(ransac_lines[get_line_number].a / ransac_lines[get_line_number].b) < 0)
+      double slope = ransac_lines.back().b / ransac_lines.back().a;
+      plt::plot(std::vector<double>{ransac_lines.back().low_x, ransac_lines.back().high_x}, std::vector<double>{slope * ransac_lines.back().low_x, slope * ransac_lines.back().high_x});
+      if (-(ransac_lines.back().a / ransac_lines.back().b) < 0)
       {
-         if (-ransac_lines[get_line_number].c / ransac_lines[get_line_number].b > 0)
+         if (-ransac_lines.back().c / ransac_lines.back().b > 0)
          {
-            std::cout << "theta_line " << line_number + 1 << " :" << std::atan(slope) * 180.0 / pi << std::endl;
+            // std::cout << "theta_line " << line_number + 1 << " :" << std::atan(slope) * 180.0 / pi << std::endl;
             return std::atan(slope); // 第一象限
          }
          else
          {
-            std::cout << "theta_line " << line_number + 1 << " :" << (std::atan(slope) + pi) * 180.0 / pi << std::endl;
+            // std::cout << "theta_line " << line_number + 1 << " :" << (std::atan(slope) + pi) * 180.0 / pi << std::endl;
             return std::atan(slope) + pi; // 第三象限
          }
       }
       else
       {
-         if (-ransac_lines[get_line_number].c / ransac_lines[get_line_number].b > 0)
+         if (-ransac_lines.back().c / ransac_lines.back().b > 0)
          {
-            std::cout << "theta_line " << line_number + 1 << " :" << (std::atan(slope) + pi) * 180.0 / pi << std::endl;
+            // std::cout << "theta_line " << line_number + 1 << " :" << (std::atan(slope) + pi) * 180.0 / pi << std::endl;
             return std::atan(slope) + pi; // 第二象限
          }
          else
          {
-            std::cout << "theta_line " << line_number + 1 << " :" << (std::atan(slope) + 2 * pi) * 180.0 / pi << std::endl;
+            // std::cout << "theta_line " << line_number + 1 << " :" << (std::atan(slope) + 2 * pi) * 180.0 / pi << std::endl;
             return std::atan(slope) + 2 * pi; // 第四象限
          }
       }
@@ -187,10 +187,10 @@ private:
    double get_distance_line(int line_number)
    {
       int get_line_number = line_number;
-      double x2 = ransac_lines[get_line_number].high_x;
-      double x1 = ransac_lines[get_line_number].low_x;
-      double y2 = ransac_lines[get_line_number].high_y;
-      double y1 = ransac_lines[get_line_number].low_y;
+      double x2 = ransac_lines.back().high_x;
+      double x1 = ransac_lines.back().low_x;
+      double y2 = ransac_lines.back().high_y;
+      double y1 = ransac_lines.back().low_y;
 
       double a = x2 - x1;
       double b = y2 - y1;
@@ -200,16 +200,16 @@ private:
       double tt = -(a * x1 + b * y1);
       if (tt < 0)
       {
-         std::cout << "distance_line " << line_number + 1 << ":" << sqrt(x1 * x1 + y1 * y1) << std::endl;
+         // std::cout << "distance_line " << line_number + 1 << ":" << sqrt(x1 * x1 + y1 * y1) << std::endl;
          return sqrt(x1 * x1 + y1 * y1);
       }
       if (tt > r2)
       {
-         std::cout << "distance_line " << line_number + 1 << ":" << sqrt(x2 * x2 + y2 * y2) << std::endl;
+         // std::cout << "distance_line " << line_number + 1 << ":" << sqrt(x2 * x2 + y2 * y2) << std::endl;
          return sqrt(x2 * x2 + y2 * y2);
       }
       double f1 = a * y1 - b * x1;
-      std::cout << "distance_line " << line_number + 1 << " :" << sqrt((f1 * f1) / r2) << std::endl;
+      // std::cout << "distance_line " << line_number + 1 << " :" << sqrt((f1 * f1) / r2) << std::endl;
       return sqrt((f1 * f1) / r2);
    }
    void draw_line(line_segment const &line)
@@ -217,7 +217,7 @@ private:
       std::vector<double> x, y;
       double x_width = line.high_x - line.low_x;
       double y_width = line.high_y - line.low_y;
-      std::cout << "line" << now_line_number + 1 << ":" << line.high_x << "~" << line.low_x << " a:" << line.a << " b:" << line.b << " c:" << line.c << std::endl;
+      std::cout << "line" << now_line_number + 1 << ":" << line.high_x << "~" << line.low_x << " a:" << line.a << " b:" << line.b << " c:" << line.c << " distance:" << line.distance << " theta:" << line.theta * 180 / pi << std::endl;
 
       if (x_width > y_width)
       {

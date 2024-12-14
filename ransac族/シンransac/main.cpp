@@ -9,7 +9,7 @@ namespace plt = matplotlibcpp;
 
 int main()
 {
-   pointsProcess cloud{1, 750}; // コンストラクタと同時に,線,点の数を宣言
+   pointsProcess cloud{5, 750}; // コンストラクタと同時に,線,点の数を宣言
 
    drow_axes(5); // 座標軸を描写
 
