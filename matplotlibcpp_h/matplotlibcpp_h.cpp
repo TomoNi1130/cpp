@@ -19,8 +19,20 @@ namespace plt = matplotlibcpp;
 int main()
 {
    int n = 1000;
+   std::vector<double> x_x_line, y_x_line, x_y_line, y_y_line;
 
-   std::vector<double> x(n), y(n); // x,yともにnこのdouble型の要素を持つように定義する(この要素たちを使って点を表現する)
+   for (int i = -1; i < 2; i++)
+   {
+      x_x_line.push_back(i * 5);
+      y_x_line.push_back(0);
+      y_y_line.push_back(i * 5);
+      x_y_line.push_back(0);
+   }
+   plt::plot(x_x_line, y_x_line);
+   plt::plot(x_y_line, y_y_line);
+
+   std::vector<double>
+       x(n), y(n); // x,yともにnこのdouble型の要素を持つように定義する(この要素たちを使って点を表現する)
 
    for (int i = -500; i < n; ++i)
    {
@@ -41,6 +53,7 @@ int main()
    }
    plt::named_plot("0.006x-2", x, ny); // plot関数で線が描ける
    plt::named_plot("0.009x+4", x, nz);
+
    // std::vector<double> xl = {-5, 5}, yl = {0, 0};
    // plt::plot(xl, yl);
    plt::legend(); // これがないと左上の名札が出ない

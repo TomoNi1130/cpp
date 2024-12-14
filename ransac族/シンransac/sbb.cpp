@@ -8,6 +8,8 @@
 
 namespace plt = matplotlibcpp;
 
+double pi = 3.1415;
+
 struct line_segment
 {
    // 線分にするためのデータ
@@ -20,6 +22,22 @@ struct line
 {
    double a, b, c;
 };
+
+void drow_axes(int x) // 座標軸を書く用の関数
+{
+
+   std::vector<double> x_x_line, y_x_line, x_y_line, y_y_line;
+
+   for (int i = -1; i < 2; i++)
+   {
+      x_x_line.push_back(i * x);
+      y_x_line.push_back(0);
+      y_y_line.push_back(i * x);
+      x_y_line.push_back(0);
+   }
+   plt::plot(x_x_line, y_x_line);
+   plt::plot(x_y_line, y_y_line);
+}
 
 class pointsProcess
 {
@@ -118,6 +136,54 @@ public:
       }
    }
 
+   double get_distance_line(int line_number)
+   {
+      int get_line_number = line_number - 1;
+      double x2 = ransac_lines[get_line_number].high_x;
+      double x1 = ransac_lines[get_line_number].low_x;
+      double y2 = ransac_lines[get_line_number].high_y;
+      double y1 = ransac_lines[get_line_number].low_y;
+
+      double a = x2 - x1;
+      double b = y2 - y1;
+      double a2 = a * a;
+      double b2 = b * b;
+      double r2 = a2 + b2;
+      double tt = -(a * x1 + b * y1);
+      if (tt < 0)
+      {
+         return sqrt(x1 * x1 + y1 * y1);
+      }
+      if (tt > r2)
+      {
+         return sqrt(x2 * x2 + y2 * y2);
+      }
+      double f1 = a * y1 - b * x1;
+      return sqrt((f1 * f1) / r2);
+   }
+
+   double get_theta(int line_number)
+   {
+      int get_line_number = line_number - 1;
+      std::cout << "aran_line:" << ransac_lines[get_line_number].b / ransac_lines[get_line_number].a << std::endl;
+      double slope = ransac_lines[get_line_number].b / ransac_lines[get_line_number].a;
+      plt::plot(std::vector<double>{ransac_lines[get_line_number].low_x, ransac_lines[get_line_number].high_x}, std::vector<double>{slope * ransac_lines[get_line_number].low_x, slope * ransac_lines[get_line_number].high_x});
+      if (-(ransac_lines[get_line_number].b / ransac_lines[get_line_number].a) < 0)
+      {
+         if (ransac_lines[get_line_number].c > 0)
+            return std::atan(slope) - pi;
+         else
+            return std::atan(slope) + pi;
+      }
+      else
+      {
+         if (ransac_lines[get_line_number].c < 0)
+            return std::atan(slope) + 3 * pi;
+         else
+            return std::atan(slope) + pi;
+      }
+   }
+
 private:
    std::vector<double> _x, _y;
    std::vector<bool> _inliers; // 直線の近くにある点を記録するための配列(線の重複を防ぐため)
@@ -131,6 +197,7 @@ private:
       double x_width = line.high_x - line.low_x;
       double y_width = line.high_y - line.low_y;
       std::cout << "line" << now_line_number + 1 << ":" << line.high_x << "~" << line.low_x << std::endl;
+      std::cout << "ransac_line:" << -(line.a / line.b) << std::endl;
       if (x_width > y_width)
       {
          for (int i = 0; i < 2; i++)
