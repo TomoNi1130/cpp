@@ -46,152 +46,137 @@ void drow_axes(int x) // 座標軸を書く用の関数
 class pointsProcess
 {
 public:
-   pointsProcess(const int line_number, const int points_number)
-   {
-      all_line_number = line_number;
-      all_points_number = points_number;
-      _inliers.resize(all_points_number, false);
-   }
-   void draw_points_cloud()
-   {
-      plt::scatter(_x, _y);
-   }
-   void make_points_cloud()
-   {
-      std::random_device rad;
-      std::mt19937 random(rad());
-      std::uniform_real_distribution<double> dist(-5.0f, 5.0f);
+   pointsProcess(std::vector<double> &x, std::vector<double> &y)
+       : _x(x), _y(y), all_points_num(x.size()) {}
 
-      _x.resize(all_points_number);
-      _y.resize(all_points_number);
-      for (int i = 0; i < all_points_number; i++)
+   void ransac(const int line_num, const int max_iterations, const double threshold, int const Minimum_guarantee)
+   {
+      std::vector<bool> inlier(all_points_num, false);
+
+      for (int now_line_num = 0; now_line_num < line_num; now_line_num++)
       {
-         _x[i] = dist(random);
-         _y[i] = dist(random);
-      }
-   }
-   void ransac(const int max_iterations, const double threshold, int const Minimum_guarantee) // 試行回数，闘値，最低保証(inlier下限)
-   {
-      std::cout << "ransac" << std::endl;
-      std::random_device rd;
-      std::mt19937 gen(rd());
-      std::uniform_real_distribution<double> dis(0, _x.size() - 1);
+         line_segment best_line; // 求める線分
+         std::vector<bool> guess_guess_inlier(all_points_num);
+         int best_inlier_count = 0;
 
-      for (int line_num = 0; line_num < all_line_number; line_num++) // 決まった数だけ線分を書く//line_segment(線分)を求める
-      {
-         std::vector<bool> best_inliers(_x.size(), false);
-         line_segment best_model;
-         int best_inliers_count = 0;
-
-         for (int i = 0; i < max_iterations; i++) // 試行回数の分だけランダムに生成された直線を選定する//line(直線)を求める
+         for (int i = 0; i < max_iterations; i++)
          {
-            std::vector<bool> guess_inliers(_x.size(), false);
-            std::vector<double> in_line_x(0); // inlierのx座標を記録するやつ//線分にする
-            std::vector<double> in_line_y(0); // inlierのx座標を記録するやつ//線分にする
-            int guess_inliers_count = 0;
+            std::random_device rd;
+            std::mt19937 gen(rd());
+            std::uniform_real_distribution<double> dis(0, _x.size() - 1);
+            std::vector<bool> guess_inlier = inlier;
+            std::vector<double> inlier_x;
+            std::vector<double> inlier_y;
+            int guess_inlier_count = 0;
+            bool break_flag = false;
 
-            int idx1 = dis(gen);
-            int idx2 = dis(gen);
-            while (idx2 == idx1)
+            double guess_1 = dis(gen);
+            double guess_2 = dis(gen);
+            while (guess_1 == guess_2)
             {
-               idx2 = dis(gen);
+               guess_2 = dis(gen);
             }
-            line guess_model = fit_line(_x[idx1], _y[idx1], _x[idx2], _y[idx2]);
-
-            for (std::vector<double>::size_type j = 0; j < _x.size(); j++)
+            line guess_line = fit_line(_x[guess_1], _y[guess_1], _x[guess_2], _y[guess_2]);
+            for (int j = 0; j < _x.size(); j++)
             {
-               if (!_inliers[j] && calculate_error(_x[j], _y[j], guess_model) < threshold) // 予測グラフと，各点の誤差が闘値以下であれば，
+               // std::cout << "points" << _y[0] << std::endl;
+               if (calculate_error(_x[j], _y[j], guess_line) < threshold && !inlier[j])
                {
-                  ++guess_inliers_count;
-                  guess_inliers[j] = true;
-                  in_line_x.push_back(_x[j]);
-                  in_line_y.push_back(_y[j]);
+                  guess_inlier_count++;
+                  guess_inlier[j] = true;
+                  inlier_x.push_back(_x[j]);
+                  inlier_y.push_back(_y[j]);
                }
             }
-            if (guess_inliers_count > best_inliers_count)
+            std::cout << inlier_x.size() << std::endl;
+            sort(inlier_x.begin(), inlier_x.end()); // inlierを順番に並べ替え
+            // std::cout << "検査開始..." << std::endl;
+            if (!inlier_x.size() == 0)
+               for (int k = 0; k < inlier_x.size(); k++)
+               {
+                  // std::cout << ".";
+                  if (abs(inlier_x[k + 1]) > abs(inlier_x[k]) * 10.0)
+                  {
+                     std::cout << "breaked!!" << abs(inlier_x[k + 1]) << ">" << abs(inlier_x[k]) * 8.0 << std::endl;
+                     break_flag = true;
+                  }
+               }
+            else
+               std::cout << "inlier.size() = 0" << std::endl;
+            // std::cout << "\n"
+            //           << "検査終了" << std::endl;
+            if (best_inlier_count < guess_inlier_count && !break_flag)
             {
-               best_inliers = guess_inliers;
-               best_inliers_count = guess_inliers_count;
-               best_model.a = guess_model.a;
-               best_model.b = guess_model.b;
-               best_model.c = guess_model.c;
-               best_model.low_x = *min_element(begin(in_line_x), end(in_line_x));
-               best_model.high_x = *max_element(begin(in_line_x), end(in_line_x));
-               best_model.high_y = *max_element(begin(in_line_y), end(in_line_y));
-               best_model.low_y = *min_element(begin(in_line_y), end(in_line_y));
+
+               best_inlier_count = guess_inlier_count;
+               guess_guess_inlier = guess_inlier;
+               best_line.a = guess_line.a;
+               best_line.b = guess_line.b;
+               best_line.c = guess_line.c;
+               best_line.low_x = *std::min_element(begin(inlier_x), end(inlier_x));
+               best_line.high_x = *std::max_element(begin(inlier_x), end(inlier_x));
+               best_line.high_y = *std::max_element(begin(inlier_y), end(inlier_y));
+               best_line.low_y = *std::min_element(begin(inlier_y), end(inlier_y));
+               best_line.distance = get_distance_line(best_line.low_x, best_line.low_y, best_line.high_x, best_line.high_y);
+               best_line.theta = get_theta(guess_line.a, guess_line.b, guess_line.c);
             }
          }
+         inlier = guess_guess_inlier;
+         draw_line(best_line);
+      } // 線の数
 
-         if (best_inliers_count < Minimum_guarantee && ransac_lines.size() > all_line_number / 2)
-            break;
-         for (int i = 0; i < all_points_number; i++)
-         {
-            if (best_inliers[i])
-               _inliers[i] = true;
-         }
-         ransac_lines.push_back(best_model);
-         ransac_lines.back().distance = get_distance_line(line_num);
-         ransac_lines.back().theta = get_theta(line_num);
-      }
-   }
-
-   void draw_ransac_lines()
-   {
-      for (const line_segment line : ransac_lines) // この書き方は知らなかった(AIに聞いた)
-      {
-         draw_line(line);
-      }
-   }
+   } // ransac関数
 
 private:
-   std::vector<double> _x, _y;
-   std::vector<bool> _inliers; // 直線の近くにある点を記録するための配列(線の重複を防ぐため)
-   std::vector<line_segment> ransac_lines;
-   int all_line_number;
-   int all_points_number; // すべての点の合計数
+   const int all_points_num;
    int now_line_number = 0;
+   const std::vector<double> _x, _y;
 
-   double get_theta(int line_number)
+   double calculate_error(const double &x, const double &y, const line &model) // 誤差を求める
    {
-      int get_line_number = line_number;
-      double slope = ransac_lines.back().b / ransac_lines.back().a;
-      plt::plot(std::vector<double>{ransac_lines.back().low_x, ransac_lines.back().high_x}, std::vector<double>{slope * ransac_lines.back().low_x, slope * ransac_lines.back().high_x});
-      if (-(ransac_lines.back().a / ransac_lines.back().b) < 0)
+      double error = abs(model.a * x + model.b * y + model.c) / std::sqrt(model.a * model.a + model.b * model.b);
+      return error; // 差の絶対値を返す
+   }
+
+   line fit_line(double const x_1, double const y_1, double const x_2, double const y_2) // 二点の距離から直線を割り出す
+   {
+      line guess_line;
+      double m = (y_1 - y_2) / (x_1 - x_2);
+      double b = y_1 - m * x_1;
+      guess_line.a = m;
+      guess_line.b = -1;
+      guess_line.c = b;
+      return guess_line;
+   }
+
+   double get_theta(double a, double b, double c)
+   {
+      double slope = b / a;
+      if (-(a / b) < 0)
       {
-         if (-ransac_lines.back().c / ransac_lines.back().b > 0)
+         if (-(c / b) > 0)
          {
-            // std::cout << "theta_line " << line_number + 1 << " :" << std::atan(slope) * 180.0 / pi << std::endl;
             return std::atan(slope); // 第一象限
          }
          else
          {
-            // std::cout << "theta_line " << line_number + 1 << " :" << (std::atan(slope) + pi) * 180.0 / pi << std::endl;
             return std::atan(slope) + pi; // 第三象限
          }
       }
       else
       {
-         if (-ransac_lines.back().c / ransac_lines.back().b > 0)
+         if (-(c / b) > 0)
          {
-            // std::cout << "theta_line " << line_number + 1 << " :" << (std::atan(slope) + pi) * 180.0 / pi << std::endl;
             return std::atan(slope) + pi; // 第二象限
          }
          else
          {
-            // std::cout << "theta_line " << line_number + 1 << " :" << (std::atan(slope) + 2 * pi) * 180.0 / pi << std::endl;
             return std::atan(slope) + 2 * pi; // 第四象限
          }
       }
    }
-
-   double get_distance_line(int line_number)
+   double get_distance_line(double x1, double y1, double x2, double y2)
    {
-      int get_line_number = line_number;
-      double x2 = ransac_lines.back().high_x;
-      double x1 = ransac_lines.back().low_x;
-      double y2 = ransac_lines.back().high_y;
-      double y1 = ransac_lines.back().low_y;
-
       double a = x2 - x1;
       double b = y2 - y1;
       double a2 = a * a;
@@ -200,18 +185,16 @@ private:
       double tt = -(a * x1 + b * y1);
       if (tt < 0)
       {
-         // std::cout << "distance_line " << line_number + 1 << ":" << sqrt(x1 * x1 + y1 * y1) << std::endl;
          return sqrt(x1 * x1 + y1 * y1);
       }
       if (tt > r2)
       {
-         // std::cout << "distance_line " << line_number + 1 << ":" << sqrt(x2 * x2 + y2 * y2) << std::endl;
          return sqrt(x2 * x2 + y2 * y2);
       }
       double f1 = a * y1 - b * x1;
-      // std::cout << "distance_line " << line_number + 1 << " :" << sqrt((f1 * f1) / r2) << std::endl;
       return sqrt((f1 * f1) / r2);
    }
+
    void draw_line(line_segment const &line)
    {
       std::vector<double> x, y;
@@ -238,19 +221,4 @@ private:
       plt::plot(x, y);
       now_line_number++;
    }
-   double calculate_error(const double &x, const double &y, const line &model) // 誤差を求める
-   {
-      double error = abs(model.a * x + model.b * y + model.c) / std::sqrt(model.a * model.a + model.b * model.b);
-      return error; // 差の絶対値を返す
-   }
-
-   line fit_line(double &x_1, double &y_1, double &x_2, double &y_2) // 二点の距離から直線を割り出す
-   {
-      line guess_line;
-      guess_line.a = y_2 - y_1;
-      guess_line.b = x_2 - x_1;
-      guess_line.c = y_1 * x_2 - x_1 * y_2;
-      return guess_line;
-   }
-
 }; // pointsProcess
